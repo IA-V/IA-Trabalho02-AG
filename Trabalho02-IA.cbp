@@ -31,9 +31,18 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="alelo.h" />
+		<Unit filename="cromossomo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cromossomo.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="populacao.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="populacao.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

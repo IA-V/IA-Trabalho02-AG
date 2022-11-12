@@ -31,7 +31,7 @@
 
 // ANIMAIS
 #define CACHORRO 21
-#define CAVALO 27
+#define CAVALO 22
 #define GATO 23
 #define PASSARO 24
 #define PEIXE 25

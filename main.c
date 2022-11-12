@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "alelo.h"
 #include "cromossomo.h"
+#include "populacao.h"
 
 #define TAMCROMOSSOMO 5 // comprimento do vetor 'genes' de cada cromossomo
 
@@ -11,7 +13,7 @@
 
 typedef struct _cromossomo_{
     int chave;
-    int *genes;
+    int **genes;
     int pontuacao;
 } Cromossomo;
 
@@ -24,6 +26,14 @@ int main()
 
     Cromossomo *crom1 = construir_cromossomo(TAMCROMOSSOMO);
     Cromossomo *crom2 = construir_cromossomo(TAMCROMOSSOMO);
+
+    Cromossomo **populacao = gerar_populacao_inicial(POPINICIAL, TAMCROMOSSOMO);
+
+    pegar_individuos_menos_aptos(populacao, POPINICIAL);
+
+    // exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
+    // mutacao(populacao, POPINICIAL);
+    // exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
 
     /*printf("%d\n", crom1->chave);
     printf("%d\n", crom2->chave);*/
