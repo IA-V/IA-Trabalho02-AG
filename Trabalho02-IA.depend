@@ -1,11 +1,11 @@
 # depslib dependency file v1.0
-1668256144 source:c:\users\iagov\onedrive\documentos\trabalho02-ia\cromossomo.c
+1668274030 source:c:\users\iagov\onedrive\documentos\trabalho02-ia\cromossomo.c
 	"cromossomo.h"
 	<stdlib.h>
 
-1668200306 c:\users\iagov\onedrive\documentos\trabalho02-ia\cromossomo.h
+1668283029 c:\users\iagov\onedrive\documentos\trabalho02-ia\cromossomo.h
 
-1668273511 source:c:\users\iagov\onedrive\documentos\trabalho02-ia\main.c
+1668280564 source:c:\users\iagov\onedrive\documentos\trabalho02-ia\main.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
@@ -15,10 +15,10 @@
 
 1668256181 c:\users\iagov\onedrive\documentos\trabalho02-ia\alelo.h
 
-1668273605 c:\users\iagov\onedrive\documentos\trabalho02-ia\populacao.h
+1668283026 c:\users\iagov\onedrive\documentos\trabalho02-ia\populacao.h
 	"cromossomo.h"
 
-1668273443 source:c:\users\iagov\onedrive\documentos\trabalho02-ia\populacao.c
+1668283015 source:c:\users\iagov\onedrive\documentos\trabalho02-ia\populacao.c
 	"populacao.h"
 	"cromossomo.h"
 	"alelo.h"

@@ -1,7 +1,17 @@
 #include "cromossomo.h"
+#include "alelo.h"
+
 #include <stdlib.h>
 
 int contador_chave = 1; // guarda o valor da ultima chave gerada
+
+/* CONSERTAR GERACAO DE ALELOS!!! -> NAO PODE OCORRER REPETICAO DE VALORES NUMA MESMA COLUNA */
+
+int cores[5] = {AMARELO, AZUL, BRANCO, VERDE, VERMELHO};
+int nacionalidades[5] = {ALEMAO, DINAMARQUES, INGLES, NORUEGUES, SUECO};
+int bebidas[5] = {AGUA, CAFE, CERVEJA, CHA, LEITE};
+int cigarros[5] = {BLENDS, BLUEMASTER, DUNHILL, PALLMALL, PRINCE};
+int animais[5] = {CACHORRO, CAVALO, GATO, PASSARO, PEIXE};
 
 typedef struct _cromossomo_{
     int chave;
@@ -10,6 +20,12 @@ typedef struct _cromossomo_{
 } Cromossomo;
 
 int gerar_pts_aleatoria(int lower, int upper) // serve apenas para testar as operações geneticas
+{
+    int num = (rand() % (upper - lower + 1)) + lower;
+    return num;
+}
+
+int gerar_alelo(int lower, int upper)
 {
     int num = (rand() % (upper - lower + 1)) + lower;
     return num;

@@ -6,11 +6,17 @@
 #include <stdio.h>
 #include <time.h>
 
+#define FALSE 0
+#define TRUE !(FALSE)
+
 typedef struct _cromossomo_{
     int chave;
     int **genes;
     int pontuacao;
 } Cromossomo;
+
+int qtd_sobreviventes = 0;
+Cromossomo **sobreviventes = NULL; // vetor para armazenar os individuos que sobrevivem para a proxima geracao
 
 // Codigo do MergeSort adaptado de https://gist.github.com/olegon/27c2a880c9b932862e60ab5eb89be5b6
 void mergesort(Cromossomo **populacao, int tamanho_pop) {
@@ -60,10 +66,17 @@ void merge(Cromossomo **populacao, Cromossomo **c, int i, int m, int f) {
   while (ic <= f) populacao[z++] = c[ic++];
 }
 
-int gerar_alelo(int lower, int upper)
+void exibir_genotipo_sobreviventes(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 {
-    int num = (rand() % (upper - lower + 1)) + lower;
-    return num;
+    for(int i = 0; i < qtd_sobreviventes; i++)
+    {
+        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\n", i+1, sobreviventes[i]->pontuacao, sobreviventes[i]->chave);
+        for(int j = 0; j < tamanho_cromossomo; j++)
+        {
+            printf("Casa %d: %d %d %d %d %d\n", j+1, sobreviventes[i]->genes[j][0], sobreviventes[i]->genes[j][1], sobreviventes[i]->genes[j][2], sobreviventes[i]->genes[j][3], sobreviventes[i]->genes[j][4]);
+        }
+        printf("\n");
+    }
 }
 
 void exibir_genotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
@@ -91,85 +104,106 @@ int **gerar_populacao_inicial(int tam_pop, int tamanho_cromossomo)
     return populacao;
 }
 
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 void *mutacao(Cromossomo **pop, int tamanho_pop)
 {
-    float porcentagem = ((float)rand()/(float)(RAND_MAX)) * 1; // gera float aleatorio entre 0 e 1
-
-    if(porcentagem <= TAXA_MUTACAO)
+    int qtd_individuos = tamanho_pop * TAXA_MUTACAO;
+    int indice;
+    int locus, casa;
+    for(int i = 0; i < qtd_individuos; i++)
     {
-        int locus, casa;
-        for(int i = 0; i < tamanho_pop; i++)
-        {
-            locus = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente o locus do individuo que sofrera mutacao
-            casa = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente a casa cujo gene sofrera alteracao
-            int novo_alelo;
-            switch(locus)
+        if(sobreviventes != NULL){
+            if(!eh_sobrevivente(pop[i]))
             {
-                case 0:
-                    do
-                    {
-                        novo_alelo = gerar_alelo(1, 5);
-                    }while(novo_alelo == pop[i]->genes[casa][locus]);
+                locus = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente o locus do individuo que sofrera mutacao
+                casa = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente a casa cujo gene sofrera alteracao
+                int novo_alelo;
+                switch(locus)
+                {
+                    case 0:
+                        do
+                        {
+                            novo_alelo = gerar_alelo(1, 5);
+                        }while(novo_alelo == pop[i]->genes[casa][locus]);
 
-                    break;
-                case 1:
-                    do
-                    {
-                        novo_alelo = gerar_alelo(6, 10);
-                    }while(novo_alelo == pop[i]->genes[casa][locus]);
+                        break;
+                    case 1:
+                        do
+                        {
+                            novo_alelo = gerar_alelo(6, 10);
+                        }while(novo_alelo == pop[i]->genes[casa][locus]);
 
-                    break;
-                case 2:
-                    do
-                    {
-                        novo_alelo = gerar_alelo(11, 15);
-                    }while(novo_alelo == pop[i]->genes[casa][locus]);
+                        break;
+                    case 2:
+                        do
+                        {
+                            novo_alelo = gerar_alelo(11, 15);
+                        }while(novo_alelo == pop[i]->genes[casa][locus]);
 
-                    break;
-                case 3:
-                    do
-                    {
-                        novo_alelo = gerar_alelo(16, 20);
-                    }while(novo_alelo == pop[i]->genes[casa][locus]);
+                        break;
+                    case 3:
+                        do
+                        {
+                            novo_alelo = gerar_alelo(16, 20);
+                        }while(novo_alelo == pop[i]->genes[casa][locus]);
 
-                    break;
-                case 4:
-                    do
-                    {
-                        novo_alelo = gerar_alelo(21, 25);
-                    }while(novo_alelo == pop[i]->genes[casa][locus]);
+                        break;
+                    case 4:
+                        do
+                        {
+                            novo_alelo = gerar_alelo(21, 25);
+                        }while(novo_alelo == pop[i]->genes[casa][locus]);
 
-                    break;
+                        break;
+                }
+                pop[i]->genes[casa][locus] = novo_alelo;
             }
-            pop[i]->genes[casa][locus] = novo_alelo;
         }
     }
+
     // printf("%.2f\n", porcentagem);
 }
 
-void substituir_individuos_menos_aptos(Cromossomo **populacao, int tamanho_pop, int tamanho_cromossomo)
-{
-    int qtd_individuos = tamanho_pop * 0.15; // 15% da populacao sera selecionada como parte menos apta
-    int qtd_selecionados = 0;
-
-    // printf("%d\n", qtd_individuos);
-    int *chaves_menos_aptos = (int *)malloc(qtd_individuos * sizeof(int));
-    mergesort(populacao, tamanho_pop); // ordena o vetor da populacao em ordem crescente
-
-
-    for(int i = 0; i < qtd_individuos; i++)
-    {
-        free(populacao[i]);
-        populacao[i] = construir_cromossomo(tamanho_cromossomo); // substitui os primeiros "qtd_individuos" cromossomos por cromossomos aleatorios
-    }
-}
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 void imigracao(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 {
-    float porcentagem = ((float)rand()/(float)(RAND_MAX)) * 1; // gera float aleatorio entre 0 e 1
+    int qtd_individuos = tamanho_pop * TAXA_IMIGRACAO; // TAXA_IMIGRACAO% da populacao sera selecionada como parte menos apta
 
-    if(porcentagem <= TAXA_IMIGRACAO)
+    // printf("%d\n", qtd_individuos);
+    mergesort(pop, tamanho_pop); // ordena o vetor da populacao em ordem crescente
+
+    for(int i = 0; i < qtd_individuos; i++)
     {
-        substituir_individuos_menos_aptos(pop, tamanho_pop, tamanho_cromossomo);
+        free(pop[i]);
+        pop[i] = construir_cromossomo(tamanho_cromossomo); // substitui os primeiros "qtd_individuos" cromossomos por cromossomos aleatorios
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+int eh_sobrevivente(Cromossomo *crom)
+{
+    for(int i = 0; i < qtd_sobreviventes; i++)
+    {
+        if(sobreviventes[i]->chave == crom->chave)
+        {
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+void sobrevivencia(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
+{
+    qtd_sobreviventes = tamanho_pop * TAXA_SOBREVIVENCIA; // TAXA_SOBREVIVENCIA% da populacao sera selecionada como parte sobrevivente
+    sobreviventes = (Cromossomo **)malloc(qtd_sobreviventes * sizeof(Cromossomo *));
+
+    mergesort(pop, tamanho_pop); // ordena o vetor da populacao em ordem crescente
+
+    for(int i = tamanho_pop-1, j = 0; i >= (tamanho_pop - qtd_sobreviventes); i--, j++)
+    {
+        sobreviventes[j] = pop[i];
     }
 }
