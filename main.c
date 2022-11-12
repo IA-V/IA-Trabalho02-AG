@@ -29,11 +29,11 @@ int main()
 
     Cromossomo **populacao = gerar_populacao_inicial(POPINICIAL, TAMCROMOSSOMO);
 
-    pegar_individuos_menos_aptos(populacao, POPINICIAL);
 
-    // exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
+    exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
     // mutacao(populacao, POPINICIAL);
-    // exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
+    imigracao(populacao, POPINICIAL, TAMCROMOSSOMO);
+    exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
 
     /*printf("%d\n", crom1->chave);
     printf("%d\n", crom2->chave);*/

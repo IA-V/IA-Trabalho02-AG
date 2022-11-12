@@ -37,7 +37,6 @@ void sort(Cromossomo **populacao, Cromossomo **c, int i, int f) {
   merge(populacao, c, i, m, f);
 }
 
-
 /*
   Dado um vetor v e três inteiros i, m e f, sendo v[i..m] e v[m+1..f] vetores ordenados,
   coloca os elementos destes vetores, em ordem crescente, no vetor em v[i..f].
@@ -80,14 +79,6 @@ void exibir_genotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
     }
 }
 
-/*void ordenar_por_pts(Cromossomo **pop, int tamanho_pop)
-{
-    for(int i = 0; i < tamanho_pop; i++)
-    {
-
-    }
-}*/
-
 int **gerar_populacao_inicial(int tam_pop, int tamanho_cromossomo)
 {
     Cromossomo **populacao = (Cromossomo **)malloc(tam_pop * sizeof(Cromossomo *));
@@ -95,17 +86,6 @@ int **gerar_populacao_inicial(int tam_pop, int tamanho_cromossomo)
     for(int i = 0; i < tam_pop; i++)
     {
         populacao[i] = construir_cromossomo(tamanho_cromossomo);
-
-        for(int j = 0; j < tamanho_cromossomo; j++)
-        {
-            populacao[i]->genes[j][0] = gerar_alelo(1, 5);
-            populacao[i]->genes[j][1] = gerar_alelo(6, 10);
-            populacao[i]->genes[j][2] = gerar_alelo(11, 15);
-            populacao[i]->genes[j][3] = gerar_alelo(16, 20);
-            populacao[i]->genes[j][4] = gerar_alelo(21, 25);
-        }
-
-        // populacao[i]->genes[5] = gerar_alelo(26, 30);
     }
 
     return populacao;
@@ -179,16 +159,17 @@ void substituir_individuos_menos_aptos(Cromossomo **populacao, int tamanho_pop, 
 
     for(int i = 0; i < qtd_individuos; i++)
     {
+        free(populacao[i]);
         populacao[i] = construir_cromossomo(tamanho_cromossomo); // substitui os primeiros "qtd_individuos" cromossomos por cromossomos aleatorios
     }
 }
 
-void *imigracao(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
+void imigracao(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 {
     float porcentagem = ((float)rand()/(float)(RAND_MAX)) * 1; // gera float aleatorio entre 0 e 1
 
     if(porcentagem <= TAXA_IMIGRACAO)
     {
-        substituir_individuos_menos_aptos_individuos_menos_aptos(pop, tamanho_pop, tamanho_cromossomo);
+        substituir_individuos_menos_aptos(pop, tamanho_pop, tamanho_cromossomo);
     }
 }

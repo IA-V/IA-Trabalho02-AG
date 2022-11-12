@@ -22,6 +22,6 @@ int *roleta(); // -> usada para selecao dos pais usados no crossover
 void *mutacao(Cromossomo **pop, int tamanho_pop);
 
 void substituir_individuos_menos_aptos(Cromossomo **populacao, int tamanho_pop, int tamanho_cromossomo);
-void *imigracao(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo);
+void imigracao(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo);
 
 #endif
