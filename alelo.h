@@ -1,6 +1,8 @@
 #ifndef ALELO_H
 #define ALELO_H
 
+#include "sllist.h"
+
 // CORES
 #define AMARELO 1
 #define AZUL 2
@@ -35,5 +37,13 @@
 #define GATO 23
 #define PASSARO 24
 #define PEIXE 25
+
+typedef struct _alelo_ Alelo;
+
+SLList *gerar_lista_cores();
+SLList *gerar_lista_nacionalidades();
+SLList *gerar_lista_bebidas();
+SLList *gerar_lista_cigarros();
+SLList *gerar_lista_animais();
 
 #endif

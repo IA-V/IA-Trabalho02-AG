@@ -2,6 +2,7 @@
 #define POPULACAO_H
 
 #include "cromossomo.h"
+#include "sllist.h"
 
 #define TAXA_SOBREVIVENCIA 0.15
 #define TAXA_CROSSOVER 0.75

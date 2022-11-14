@@ -43,6 +43,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="populacao.h" />
+		<Unit filename="sllist.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sllist.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

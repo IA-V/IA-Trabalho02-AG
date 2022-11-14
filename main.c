@@ -31,11 +31,11 @@ int main()
 
 
     exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
-    // mutacao(populacao, POPINICIAL);
+    mutacao(populacao, POPINICIAL);
     // imigracao(populacao, POPINICIAL, TAMCROMOSSOMO);
-    sobrevivencia(populacao, POPINICIAL, TAMCROMOSSOMO);
-    exibir_genotipo_sobreviventes(populacao, POPINICIAL, TAMCROMOSSOMO);
-    // exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
+    // sobrevivencia(populacao, POPINICIAL, TAMCROMOSSOMO);
+    // exibir_genotipo_sobreviventes(populacao, POPINICIAL, TAMCROMOSSOMO);
+    exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
 
     /*printf("%d\n", crom1->chave);
     printf("%d\n", crom2->chave);*/

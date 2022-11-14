@@ -9,6 +9,16 @@
 #define FALSE 0
 #define TRUE !(FALSE)
 
+typedef struct _sllist_{
+    SLNode *primeiro;
+    SLNode *atual;
+}SLList;
+
+typedef struct _alelo_
+{
+    int valor;
+} Alelo;
+
 typedef struct _cromossomo_{
     int chave;
     int **genes;
@@ -110,59 +120,31 @@ void *mutacao(Cromossomo **pop, int tamanho_pop)
 {
     int qtd_individuos = tamanho_pop * TAXA_MUTACAO;
     int indice;
-    int locus, casa;
+    int locus, casa1, casa2;
     for(int i = 0; i < qtd_individuos; i++)
     {
-        if(sobreviventes != NULL){
-            if(!eh_sobrevivente(pop[i]))
+        indice = (rand() % ((tamanho_pop-1) - 0 + 1)) + 0;
+        if(!eh_sobrevivente(pop[indice]))
+        {
+            locus = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente um dos loci do individuo que sofrera mutacao
+            casa1 = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente uma das casas cujo gene sofrera alteracao
+
+            do
             {
-                locus = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente o locus do individuo que sofrera mutacao
-                casa = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente a casa cujo gene sofrera alteracao
-                int novo_alelo;
-                switch(locus)
-                {
-                    case 0:
-                        do
-                        {
-                            novo_alelo = gerar_alelo(1, 5);
-                        }while(novo_alelo == pop[i]->genes[casa][locus]);
+                casa2 = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente uma das casas cujo gene sofrera alteracao
+            }while(casa1 == casa2);
 
-                        break;
-                    case 1:
-                        do
-                        {
-                            novo_alelo = gerar_alelo(6, 10);
-                        }while(novo_alelo == pop[i]->genes[casa][locus]);
+            int alelo_aux;
 
-                        break;
-                    case 2:
-                        do
-                        {
-                            novo_alelo = gerar_alelo(11, 15);
-                        }while(novo_alelo == pop[i]->genes[casa][locus]);
+            alelo_aux = pop[indice]->genes[casa1][locus];
+            pop[indice]->genes[casa1][locus] = pop[indice]->genes[casa2][locus];
+            pop[indice]->genes[casa2][locus] = alelo_aux;
 
-                        break;
-                    case 3:
-                        do
-                        {
-                            novo_alelo = gerar_alelo(16, 20);
-                        }while(novo_alelo == pop[i]->genes[casa][locus]);
-
-                        break;
-                    case 4:
-                        do
-                        {
-                            novo_alelo = gerar_alelo(21, 25);
-                        }while(novo_alelo == pop[i]->genes[casa][locus]);
-
-                        break;
-                }
-                pop[i]->genes[casa][locus] = novo_alelo;
-            }
+            /*printf("Individuo: %d\n", indice+1);
+            printf("\n");*/
         }
-    }
 
-    // printf("%.2f\n", porcentagem);
+    }
 }
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -185,11 +167,14 @@ void imigracao(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 
 int eh_sobrevivente(Cromossomo *crom)
 {
-    for(int i = 0; i < qtd_sobreviventes; i++)
+    if(sobreviventes != NULL)
     {
-        if(sobreviventes[i]->chave == crom->chave)
+        for(int i = 0; i < qtd_sobreviventes; i++)
         {
-            return TRUE;
+            if(sobreviventes[i]->chave == crom->chave)
+            {
+                return TRUE;
+            }
         }
     }
     return FALSE;
