@@ -23,6 +23,7 @@ typedef struct _cromossomo_{
     int chave;
     int **genes;
     int pontuacao;
+    float aptidao;
 } Cromossomo;
 
 int qtd_sobreviventes = 0;
@@ -80,7 +81,7 @@ void exibir_genotipo_sobreviventes(Cromossomo **pop, int tamanho_pop, int tamanh
 {
     for(int i = 0; i < qtd_sobreviventes; i++)
     {
-        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\n", i+1, sobreviventes[i]->pontuacao, sobreviventes[i]->chave);
+        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, sobreviventes[i]->pontuacao, sobreviventes[i]->chave, pop[i]->aptidao);
         for(int j = 0; j < tamanho_cromossomo; j++)
         {
             printf("Casa %d: %d %d %d %d %d\n", j+1, sobreviventes[i]->genes[j][0], sobreviventes[i]->genes[j][1], sobreviventes[i]->genes[j][2], sobreviventes[i]->genes[j][3], sobreviventes[i]->genes[j][4]);
@@ -93,7 +94,7 @@ void exibir_genotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 {
     for(int i = 0; i < tamanho_pop; i++)
     {
-        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\n", i+1, pop[i]->pontuacao, pop[i]->chave);
+        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, pop[i]->pontuacao, pop[i]->chave, pop[i]->aptidao);
         for(int j = 0; j < tamanho_cromossomo; j++)
         {
             printf("Casa %d: %d %d %d %d %d\n", j+1, pop[i]->genes[j][0], pop[i]->genes[j][1], pop[i]->genes[j][2], pop[i]->genes[j][3], pop[i]->genes[j][4]);
@@ -102,7 +103,7 @@ void exibir_genotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
     }
 }
 
-int **gerar_populacao_inicial(int tam_pop, int tamanho_cromossomo)
+Cromossomo **gerar_populacao_inicial(int tam_pop, int tamanho_cromossomo)
 {
     Cromossomo **populacao = (Cromossomo **)malloc(tam_pop * sizeof(Cromossomo *));
 
@@ -116,7 +117,7 @@ int **gerar_populacao_inicial(int tam_pop, int tamanho_cromossomo)
 
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-void *mutacao(Cromossomo **pop, int tamanho_pop)
+void mutacao(Cromossomo **pop, int tamanho_pop)
 {
     int qtd_individuos = tamanho_pop * TAXA_MUTACAO;
     int indice;
@@ -190,5 +191,76 @@ void sobrevivencia(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
     for(int i = tamanho_pop-1, j = 0; i >= (tamanho_pop - qtd_sobreviventes); i--, j++)
     {
         sobreviventes[j] = pop[i];
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Cromossomo **roleta(Cromossomo **pop, int tamanho_pop)
+{
+    int qtd_individuos = tamanho_pop * TAXA_CROSSOVER;
+    int qtd_pais, count_mais_aptos = 0;
+
+    int soma_pts = 0;
+
+    Cromossomo **progenitores;
+
+    for(int i = 0; i < tamanho_pop; i++)
+    {
+        soma_pts += pop[i]->pontuacao;
+    }
+
+    mergesort(pop, tamanho_pop);
+
+    for(int i = 0; i < tamanho_pop; i++)
+    {
+        pop[i]->aptidao = pop[i]->pontuacao / (float)(soma_pts / (tamanho_pop/10));
+    }
+
+    if(qtd_individuos % 2 != 0)
+    {
+        qtd_individuos--;
+    }
+    qtd_pais = qtd_individuos / 4;
+
+    if((qtd_pais % 2) != 0)
+    {
+        qtd_pais--;
+    }
+
+    progenitores = (Cromossomo **)malloc(sizeof(Cromossomo *) * qtd_pais);
+
+    int j = tamanho_pop-1;
+    float porcentagem;
+    while(count_mais_aptos < qtd_pais)
+    {
+
+        porcentagem = ((float)rand()/(float)(RAND_MAX)) * 1;
+        if(1 - porcentagem <= pop[j]->aptidao)
+        {
+            progenitores[count_mais_aptos] = pop[j];
+            count_mais_aptos++;
+        }
+
+
+        j--;
+        if(j == -1)
+        {
+            j = tamanho_pop-1;
+        }
+    }
+    mergesort(progenitores, qtd_pais);
+    exibir_genotipo(progenitores, qtd_pais, 5);
+
+    return progenitores;
+}
+
+void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int tamanho_prog, int tamanho_cromossomo)
+{
+    int indice_ponto_corte = 2;
+
+    for(int i = 0; i < tamanho_prog; i++)
+    {
+        Cromossomo **novo_crom = construir_cromossomo(tamanho_cromossomo);
     }
 }
