@@ -9,16 +9,6 @@
 #define FALSE 0
 #define TRUE !(FALSE)
 
-typedef struct _sllist_{
-    SLNode *primeiro;
-    SLNode *atual;
-}SLList;
-
-typedef struct _alelo_
-{
-    int valor;
-} Alelo;
-
 typedef struct _cromossomo_{
     int chave;
     int **genes;
@@ -36,10 +26,6 @@ void mergesort(Cromossomo **populacao, int tamanho_pop) {
   free(c);
 }
 
-/*
-  Dado um vetor de inteiros v e dois inteiros i e f, ordena o vetor v[i..f] em ordem crescente.
-  O vetor c é utilizado internamente durante a ordenação.
-*/
 void sort(Cromossomo **populacao, Cromossomo **c, int i, int f) {
   if (i >= f) return;
 
@@ -54,10 +40,6 @@ void sort(Cromossomo **populacao, Cromossomo **c, int i, int f) {
   merge(populacao, c, i, m, f);
 }
 
-/*
-  Dado um vetor v e três inteiros i, m e f, sendo v[i..m] e v[m+1..f] vetores ordenados,
-  coloca os elementos destes vetores, em ordem crescente, no vetor em v[i..f].
-*/
 void merge(Cromossomo **populacao, Cromossomo **c, int i, int m, int f) {
   int z, iv = i, ic = m + 1;
 
@@ -77,18 +59,48 @@ void merge(Cromossomo **populacao, Cromossomo **c, int i, int m, int f) {
   while (ic <= f) populacao[z++] = c[ic++];
 }
 
-void exibir_genotipo_sobreviventes(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
+// Codigo adaptado de https://wagnergaspar.com/como-gerar-numeros-aleatorios-com-a-funcao-rand-sem-repeticao/
+int *gerar_aleatorios_nao_sobreviventes(int upper, int lower, int tamanho, Cromossomo **pop) // Gera, sem repeticao, indices aleatorios de individuos nao sobreviventes
+{
+    int i = 0, j, igual, *vet = (int *)malloc(sizeof(int)*tamanho);
+
+    do{
+        vet[i] = (rand() % ((upper) - lower + 1)) + lower; // sorteia um número
+        igual = 0;
+        if(!eh_sobrevivente(pop[vet[i]]))
+        {
+            for(j = 0; j < i; j++){ // percorre a parte do vetor já preenchido
+                if(vet[j] == vet[i])
+                    igual = 1; // número repetido
+            }
+
+            if(igual == 0) // significa que o elemento não se repetiu
+                i++;
+        }
+
+    }while(i < tamanho);
+
+    /*for(i = 0; i < tamanho; i++){
+        printf("%d\n", vet[i]);
+    }
+    printf("\n\n");*/
+
+    return vet;
+
+}
+
+/*void exibir_genotipo_sobreviventes(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 {
     for(int i = 0; i < qtd_sobreviventes; i++)
     {
-        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, sobreviventes[i]->pontuacao, sobreviventes[i]->chave, pop[i]->aptidao);
+        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, sobreviventes[i]->pontuacao, sobreviventes[i]->chave, sobreviventes[i]->aptidao);
         for(int j = 0; j < tamanho_cromossomo; j++)
         {
             printf("Casa %d: %d %d %d %d %d\n", j+1, sobreviventes[i]->genes[j][0], sobreviventes[i]->genes[j][1], sobreviventes[i]->genes[j][2], sobreviventes[i]->genes[j][3], sobreviventes[i]->genes[j][4]);
         }
         printf("\n");
     }
-}
+}*/
 
 void exibir_genotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 {
@@ -120,30 +132,31 @@ Cromossomo **gerar_populacao_inicial(int tam_pop, int tamanho_cromossomo)
 void mutacao(Cromossomo **pop, int tamanho_pop)
 {
     int qtd_individuos = tamanho_pop * TAXA_MUTACAO;
-    int indice;
+    int *indices, indice;
     int locus, casa1, casa2;
+
+    indices = gerar_aleatorios_nao_sobreviventes(tamanho_pop-1, 0, qtd_individuos, pop);
+
     for(int i = 0; i < qtd_individuos; i++)
     {
-        indice = (rand() % ((tamanho_pop-1) - 0 + 1)) + 0;
-        if(!eh_sobrevivente(pop[indice]))
+        indice = indices[i];
+
+        locus = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente um dos loci do individuo que sofrera mutacao
+        casa1 = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente uma das casas cujo gene sofrera alteracao
+
+        do
         {
-            locus = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente um dos loci do individuo que sofrera mutacao
-            casa1 = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente uma das casas cujo gene sofrera alteracao
+            casa2 = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente uma das casas cujo gene sofrera alteracao
+        }while(casa1 == casa2);
 
-            do
-            {
-                casa2 = (rand() % (4 - 0 + 1)) + 0; // seleciona aleatoriamente uma das casas cujo gene sofrera alteracao
-            }while(casa1 == casa2);
+        int alelo_aux;
 
-            int alelo_aux;
+        alelo_aux = pop[indice]->genes[casa1][locus];
+        pop[indice]->genes[casa1][locus] = pop[indice]->genes[casa2][locus];
+        pop[indice]->genes[casa2][locus] = alelo_aux;
 
-            alelo_aux = pop[indice]->genes[casa1][locus];
-            pop[indice]->genes[casa1][locus] = pop[indice]->genes[casa2][locus];
-            pop[indice]->genes[casa2][locus] = alelo_aux;
-
-            /*printf("Individuo: %d\n", indice+1);
-            printf("\n");*/
-        }
+        /*printf("Individuo: %d\n", indice+1);
+        printf("\n");*/
 
     }
 }
@@ -221,7 +234,7 @@ Cromossomo **roleta(Cromossomo **pop, int tamanho_pop)
     {
         qtd_individuos--;
     }
-    qtd_pais = qtd_individuos / 4;
+    qtd_pais = qtd_individuos / 2;
 
     if((qtd_pais % 2) != 0)
     {
@@ -250,17 +263,89 @@ Cromossomo **roleta(Cromossomo **pop, int tamanho_pop)
         }
     }
     mergesort(progenitores, qtd_pais);
-    exibir_genotipo(progenitores, qtd_pais, 5);
+    // exibir_genotipo(progenitores, qtd_pais, 5);
 
     return progenitores;
 }
 
 void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int tamanho_prog, int tamanho_cromossomo)
 {
-    int indice_ponto_corte = 2;
-
+    printf("PROGENITORES:\n");
     for(int i = 0; i < tamanho_prog; i++)
     {
-        Cromossomo **novo_crom = construir_cromossomo(tamanho_cromossomo);
+        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, progenitores[i]->pontuacao, progenitores[i]->chave, progenitores[i]->aptidao);
+        for(int j = 0; j < tamanho_cromossomo; j++)
+        {
+            printf("Casa %d: %d %d %d %d %d\n", j+1, progenitores[i]->genes[j][0], progenitores[i]->genes[j][1], progenitores[i]->genes[j][2], progenitores[i]->genes[j][3], progenitores[i]->genes[j][4]);
+        }
+        printf("\n");
+    }
+
+    int indice_ponto_corte = 2;
+    int qtd_novos_individuos = tamanho_prog * 2;
+    int indice_novos_individuos = 0;
+
+    Cromossomo **novos_individuos = (Cromossomo **)malloc(sizeof(Cromossomo *) * qtd_novos_individuos);
+
+    for(int i = 0; i < (tamanho_prog/2); i++)
+    {
+        Cromossomo *novo_crom1 = construir_cromossomo(tamanho_cromossomo);
+        Cromossomo *novo_crom2 = construir_cromossomo(tamanho_cromossomo);
+        Cromossomo *novo_crom3 = construir_cromossomo(tamanho_cromossomo);
+        Cromossomo *novo_crom4 = construir_cromossomo(tamanho_cromossomo);
+
+        for(int j = 0; j < tamanho_cromossomo; j++)
+        {
+            for(int k = 0; k < tamanho_cromossomo; k++)
+            {
+                if(k < 2)
+                {
+                    novo_crom1->genes[j][k] = progenitores[i]->genes[j][k];
+                    novo_crom3->genes[j][k] = progenitores[i]->genes[j][k];
+                    novo_crom2->genes[j][k] = progenitores[tamanho_prog-(i+1)]->genes[j][k];
+                    novo_crom4->genes[j][k] = progenitores[tamanho_prog-(i+1)]->genes[j][k];
+                } else {
+                    novo_crom4->genes[j][k] = progenitores[i]->genes[j][k];
+                    novo_crom2->genes[j][k] = progenitores[i]->genes[j][k];
+                    novo_crom3->genes[j][k] = progenitores[tamanho_prog-(i+1)]->genes[j][k];
+                    novo_crom1->genes[j][k] = progenitores[tamanho_prog-(i+1)]->genes[j][k];
+                }
+
+                novo_crom3->genes[0][k] = novo_crom1->genes[tamanho_cromossomo-1][k];
+                novo_crom3->genes[tamanho_cromossomo-1][k] = novo_crom1->genes[0][k];
+
+                novo_crom4->genes[1][k] = novo_crom2->genes[3][k];
+                novo_crom4->genes[3][k] = novo_crom2->genes[1][k];
+            }
+        }
+
+        novos_individuos[0 + indice_novos_individuos] = novo_crom1;
+        novos_individuos[1 + indice_novos_individuos] = novo_crom2;
+        novos_individuos[2 + indice_novos_individuos] = novo_crom3;
+        novos_individuos[3 + indice_novos_individuos] = novo_crom4;
+
+        indice_novos_individuos += 4;
+    }
+
+    int *indices = gerar_aleatorios_nao_sobreviventes(tamanho_pop-1, 0, qtd_novos_individuos, pop);
+
+    for(int i = 0; i < qtd_novos_individuos; i++)
+    {
+        int indice = indices[i];
+
+        free(pop[indice]);
+        pop[indice] = novos_individuos[i];
+        printf("%d\n", indice+1);
+    }
+
+    printf("\nNOVOS INDIVIDUOS:\n");
+    for(int i = 0; i < qtd_novos_individuos; i++)
+    {
+        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, novos_individuos[i]->pontuacao, novos_individuos[i]->chave, novos_individuos[i]->aptidao);
+        for(int j = 0; j < tamanho_cromossomo; j++)
+        {
+            printf("Casa %d: %d %d %d %d %d\n", j+1, novos_individuos[i]->genes[j][0], novos_individuos[i]->genes[j][1], novos_individuos[i]->genes[j][2], novos_individuos[i]->genes[j][3], novos_individuos[i]->genes[j][4]);
+        }
+        printf("\n");
     }
 }

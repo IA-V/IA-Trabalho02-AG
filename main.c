@@ -11,6 +11,8 @@
 #define POPINICIAL 150 // tamanho da populacao inicial
 #define NUMGERACOES 50 // qtd de geracoes do algoritmo
 
+#define TAMPROGENITORES POPINICIAL*TAXA_CROSSOVER
+
 typedef struct _cromossomo_{
     int chave;
     int **genes;
@@ -22,6 +24,10 @@ int geracao_atual = 1; // valor para guardar a geracao atual durante a execucao 
 
 int main()
 {
+    int qtd_progenitores = (POPINICIAL * TAXA_CROSSOVER) / 2;
+    if(qtd_progenitores % 2 != 0)
+        qtd_progenitores--;
+
     time_t t;
     srand((unsigned) time(&t));
 
@@ -31,7 +37,8 @@ int main()
     Cromossomo **populacao = gerar_populacao_inicial(POPINICIAL, TAMCROMOSSOMO);
     Cromossomo **progenitores = roleta(populacao, POPINICIAL);
 
-    exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
+    // exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
+    crossover(populacao, progenitores, POPINICIAL, qtd_progenitores, TAMCROMOSSOMO);
     // mutacao(populacao, POPINICIAL);
     // imigracao(populacao, POPINICIAL, TAMCROMOSSOMO);
     // sobrevivencia(populacao, POPINICIAL, TAMCROMOSSOMO);
