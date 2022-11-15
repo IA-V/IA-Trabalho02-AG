@@ -104,7 +104,15 @@ int *gerar_aleatorios_nao_sobreviventes(int upper, int lower, int tamanho, Cromo
 
 void exibir_genotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 {
-    for(int i = 0; i < tamanho_pop; i++)
+    // Exibe apenas o ultimo elemento
+    printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", tamanho_pop, pop[tamanho_pop-1]->pontuacao, pop[tamanho_pop-1]->chave, pop[tamanho_pop-1]->aptidao);
+    for(int j = 0; j < tamanho_cromossomo; j++)
+    {
+        printf("Casa %d: %d %d %d %d %d\n", j+1, pop[tamanho_pop-1]->genes[j][0], pop[tamanho_pop-1]->genes[j][1], pop[tamanho_pop-1]->genes[j][2], pop[tamanho_pop-1]->genes[j][3], pop[tamanho_pop-1]->genes[j][4]);
+    }
+    printf("\n");
+
+    /*for(int i = 0; i < tamanho_pop; i++)
     {
         printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, pop[i]->pontuacao, pop[i]->chave, pop[i]->aptidao);
         for(int j = 0; j < tamanho_cromossomo; j++)
@@ -112,7 +120,7 @@ void exibir_genotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
             printf("Casa %d: %d %d %d %d %d\n", j+1, pop[i]->genes[j][0], pop[i]->genes[j][1], pop[i]->genes[j][2], pop[i]->genes[j][3], pop[i]->genes[j][4]);
         }
         printf("\n");
-    }
+    }*/
 }
 
 Cromossomo **gerar_populacao_inicial(int tam_pop, int tamanho_cromossomo)
@@ -196,6 +204,17 @@ int eh_sobrevivente(Cromossomo *crom)
 
 void sobrevivencia(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 {
+    if(sobreviventes != NULL)
+    {
+        for(int i = 0; i < qtd_sobreviventes; i++)
+        {
+            free(sobreviventes[i]);
+        }
+        free(sobreviventes);
+        sobreviventes = NULL;
+        qtd_sobreviventes = 0;
+    }
+
     qtd_sobreviventes = tamanho_pop * TAXA_SOBREVIVENCIA; // TAXA_SOBREVIVENCIA% da populacao sera selecionada como parte sobrevivente
     sobreviventes = (Cromossomo **)malloc(qtd_sobreviventes * sizeof(Cromossomo *));
 
@@ -270,7 +289,7 @@ Cromossomo **roleta(Cromossomo **pop, int tamanho_pop)
 
 void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int tamanho_prog, int tamanho_cromossomo)
 {
-    printf("PROGENITORES:\n");
+    /*printf("PROGENITORES:\n");
     for(int i = 0; i < tamanho_prog; i++)
     {
         printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, progenitores[i]->pontuacao, progenitores[i]->chave, progenitores[i]->aptidao);
@@ -279,7 +298,7 @@ void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int
             printf("Casa %d: %d %d %d %d %d\n", j+1, progenitores[i]->genes[j][0], progenitores[i]->genes[j][1], progenitores[i]->genes[j][2], progenitores[i]->genes[j][3], progenitores[i]->genes[j][4]);
         }
         printf("\n");
-    }
+    }*/
 
     int indice_ponto_corte = 2;
     int qtd_novos_individuos = tamanho_prog * 2;
@@ -296,13 +315,17 @@ void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int
 
         for(int j = 0; j < tamanho_cromossomo; j++)
         {
+            printf("------------ %d\n", j+1);
             for(int k = 0; k < tamanho_cromossomo; k++)
             {
-                if(k < 2)
+                if(k < indice_ponto_corte)
                 {
+                    printf("ANTES %d\n", k+1);
                     novo_crom1->genes[j][k] = progenitores[i]->genes[j][k];
                     novo_crom3->genes[j][k] = progenitores[i]->genes[j][k];
-                    novo_crom2->genes[j][k] = progenitores[tamanho_prog-(i+1)]->genes[j][k];
+                    printf("DEPOIS %d\n", k+1);
+                    printf("tamanho_prog-(i+1) == %d\nprogenitor == %d\n", tamanho_prog-(i+1), novo_crom2->genes[j][k]);
+                    novo_crom2->genes[j][k] = progenitores[tamanho_prog-(i+1)]->genes[j][k]; // ERRO DE ACESSO A MEMORIA AQUI
                     novo_crom4->genes[j][k] = progenitores[tamanho_prog-(i+1)]->genes[j][k];
                 } else {
                     novo_crom4->genes[j][k] = progenitores[i]->genes[j][k];
@@ -324,6 +347,16 @@ void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int
         novos_individuos[2 + indice_novos_individuos] = novo_crom3;
         novos_individuos[3 + indice_novos_individuos] = novo_crom4;
 
+        novo_crom1 = NULL;
+        novo_crom2 = NULL;
+        novo_crom3 = NULL;
+        novo_crom4 = NULL;
+
+        free(novo_crom1);
+        free(novo_crom2);
+        free(novo_crom3);
+        free(novo_crom4);
+
         indice_novos_individuos += 4;
     }
 
@@ -335,10 +368,10 @@ void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int
 
         free(pop[indice]);
         pop[indice] = novos_individuos[i];
-        printf("%d\n", indice+1);
+        // printf("%d\n", indice+1);
     }
 
-    printf("\nNOVOS INDIVIDUOS:\n");
+    /*printf("\nNOVOS INDIVIDUOS:\n");
     for(int i = 0; i < qtd_novos_individuos; i++)
     {
         printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, novos_individuos[i]->pontuacao, novos_individuos[i]->chave, novos_individuos[i]->aptidao);
@@ -347,5 +380,171 @@ void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int
             printf("Casa %d: %d %d %d %d %d\n", j+1, novos_individuos[i]->genes[j][0], novos_individuos[i]->genes[j][1], novos_individuos[i]->genes[j][2], novos_individuos[i]->genes[j][3], novos_individuos[i]->genes[j][4]);
         }
         printf("\n");
+    }*/
+}
+
+void avaliar(Cromossomo **populacao, int tamanho_pop, int tamanho_cromossomo)
+{
+    for(int i = 0; i < tamanho_pop; i++)
+    {
+        populacao[i]->pontuacao = 0;
+        fitness(populacao[i], tamanho_cromossomo);
     }
+
+    mergesort(populacao, tamanho_pop);
+}
+
+void fitness(Cromossomo *individuo, int tamanho_cromossomo)
+{
+    if(individuo->genes[0][1] == NORUEGUES)
+    {
+        individuo->pontuacao++;
+    }
+
+    if(individuo->genes[2][2] == LEITE)
+    {
+        individuo->pontuacao++;
+    }
+
+    for(int i = 0; i < tamanho_cromossomo; i++)
+    {
+        if(individuo->genes[i][1] == INGLES && individuo->genes[i][0] == VERMELHO)
+        {
+            individuo->pontuacao++;
+        }
+
+        if(individuo->genes[i][1] == SUECO && individuo->genes[i][4] == CACHORRO)
+        {
+            individuo->pontuacao++;
+        }
+
+        if(individuo->genes[i][1] == DINAMARQUES && individuo->genes[i][2] == CHA)
+        {
+            individuo->pontuacao++;
+        }
+
+        if(individuo->genes[i][3] == PALLMALL && individuo->genes[i][4] == PASSARO)
+        {
+            individuo->pontuacao++;
+        }
+
+        if(individuo->genes[i][0] == AMARELO && individuo->genes[i][3] == DUNHILL)
+        {
+            individuo->pontuacao++;
+        }
+
+        if(individuo->genes[i][0] == VERDE)
+        {
+            int pontuar = FALSE;
+            if(i < tamanho_cromossomo-1)
+            {
+                if(individuo->genes[i+1][0] == BRANCO)
+                {
+                    pontuar = TRUE;
+                }
+            }
+
+            if(individuo->genes[i][2] == CAFE)
+            {
+                pontuar = TRUE;
+            }
+
+            if(pontuar)
+            {
+                individuo->pontuacao++;
+            }
+        }
+
+        if(individuo->genes[i][3] == BLENDS)
+        {
+            int pontuar = FALSE;
+            if(i > 0)
+            {
+                if(individuo->genes[i-1][4] == GATO)
+                {
+                    individuo->pontuacao++;
+                } else if(i < (tamanho_cromossomo-1))
+                {
+                    if(individuo->genes[i+1][4] == GATO)
+                    {
+                        individuo->pontuacao++;
+                    }
+                }
+
+                if(individuo->genes[i-1][2] == AGUA)
+                {
+                    pontuar = TRUE;
+                } else if(i < (tamanho_cromossomo-1))
+                {
+                    if(individuo->genes[i+1][2] == AGUA)
+                    {
+                        pontuar = TRUE;
+                    }
+                }
+            }
+
+            if(pontuar)
+            {
+                individuo->pontuacao++;
+            }
+        }
+
+        if(individuo->genes[i][4] == CAVALO)
+        {
+            int pontuar = FALSE;
+            if(i > 0)
+            {
+                if(individuo->genes[i-1][3] == DUNHILL)
+                {
+                    pontuar = TRUE;
+                } else if(i < (tamanho_cromossomo-1))
+                {
+                    if(individuo->genes[i+1][3] == DUNHILL)
+                    {
+                        pontuar = TRUE;
+                    }
+                }
+            }
+
+            if(pontuar)
+            {
+                individuo->pontuacao++;
+            }
+        }
+
+        if(individuo->genes[i][1] == NORUEGUES)
+        {
+            int pontuar = FALSE;
+            if(i > 0)
+            {
+                if(individuo->genes[i-1][0] == AZUL)
+                {
+                    pontuar = TRUE;
+                } else if(i < (tamanho_cromossomo-1))
+                {
+                    if(individuo->genes[i+1][0] == AZUL)
+                    {
+                        pontuar = TRUE;
+                    }
+                }
+            }
+
+            if(pontuar)
+            {
+                individuo->pontuacao++;
+            }
+        }
+
+        if(individuo->genes[i][3] == BLUEMASTER && individuo->genes[i][2] == CERVEJA)
+        {
+            individuo->pontuacao++;
+        }
+
+        if(individuo->genes[i][1] == ALEMAO && individuo->genes[i][3] == PRINCE)
+        {
+            individuo->pontuacao++;
+        }
+    }
+
+
 }

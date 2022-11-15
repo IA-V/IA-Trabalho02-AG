@@ -89,7 +89,7 @@ Cromossomo *construir_cromossomo(int tamanho_cromossomo)
         tamanho_lista--;
     }
     cromossomo->chave = contador_chave;
-    cromossomo->pontuacao = gerar_pts_aleatoria(0, 15); // apenas para teste
+    cromossomo->pontuacao = 0/*gerar_pts_aleatoria(0, 15)*/; // apenas para teste
     cromossomo->aptidao = 0;
 
     contador_chave++;

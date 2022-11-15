@@ -20,8 +20,8 @@
 // BEBIDAS
 #define AGUA 11
 #define CAFE 12
-#define CERVEJA 13
-#define CHA 14
+#define CHA 13
+#define CERVEJA 14
 #define LEITE 15
 
 // CIGARROS

@@ -30,4 +30,8 @@ void mutacao(Cromossomo **pop, int tamanho_pop);
 
 void imigracao(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo);
 
+// FUNCAO FITNESS
+void avaliar(Cromossomo **populacao, int tamanho_pop, int tamanho_cromossomo);
+void fitness(Cromossomo *individuo, int tamanho_cromossomo);
+
 #endif
