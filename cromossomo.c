@@ -36,7 +36,9 @@ int gerar_alelo(SLList *lista, int tamanho_lista)
     {
         atual = (Alelo *)sllPegarPrimeiro(lista);
         alelo = (Alelo *)sllRetirar(lista, (void *)&atual->valor, cmpAlelo);
-        return alelo->valor;
+        int valor = alelo->valor;
+        free(alelo);
+        return valor;
     } else {
         do
         {
@@ -45,7 +47,9 @@ int gerar_alelo(SLList *lista, int tamanho_lista)
             atual = (Alelo *)sllPegarPrimeiro(lista);
             if(porcentagem <= 0.5) {
                 alelo = (Alelo *)sllRetirar(lista, (void *)&atual->valor, cmpAlelo);
-                return alelo->valor;
+                int valor = alelo->valor;
+                free(alelo);
+                return valor;
             }
 
             while(count < tamanho_lista-1)
@@ -54,7 +58,9 @@ int gerar_alelo(SLList *lista, int tamanho_lista)
                 porcentagem = ((float)rand()/(float)(RAND_MAX)) * upper;
                 if(porcentagem <= 0.5) {
                     alelo = (Alelo *)sllRetirar(lista, (void *)&atual->valor, cmpAlelo);
-                    return alelo->valor;
+                    int valor = alelo->valor;
+                    free(alelo);
+                    return valor;
                 }
 
                 count++;
@@ -91,6 +97,12 @@ Cromossomo *construir_cromossomo(int tamanho_cromossomo)
     cromossomo->chave = contador_chave;
     cromossomo->pontuacao = 0/*gerar_pts_aleatoria(0, 15)*/; // apenas para teste
     cromossomo->aptidao = 0;
+
+    sllDestruir(cores);
+    sllDestruir(nacionalidades);
+    sllDestruir(bebidas);
+    sllDestruir(cigarros);
+    sllDestruir(animais);
 
     contador_chave++;
     return cromossomo;

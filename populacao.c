@@ -206,10 +206,10 @@ void sobrevivencia(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 {
     if(sobreviventes != NULL)
     {
-        for(int i = 0; i < qtd_sobreviventes; i++)
+        /*for(int i = 0; i < qtd_sobreviventes; i++)
         {
             free(sobreviventes[i]);
-        }
+        }*/
         free(sobreviventes);
         sobreviventes = NULL;
         qtd_sobreviventes = 0;
@@ -315,16 +315,16 @@ void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int
 
         for(int j = 0; j < tamanho_cromossomo; j++)
         {
-            printf("------------ %d\n", j+1);
+            // printf("------------ %d\n", j+1);
             for(int k = 0; k < tamanho_cromossomo; k++)
             {
                 if(k < indice_ponto_corte)
                 {
-                    printf("ANTES %d\n", k+1);
+                    // printf("ANTES %d\n", k+1);
                     novo_crom1->genes[j][k] = progenitores[i]->genes[j][k];
                     novo_crom3->genes[j][k] = progenitores[i]->genes[j][k];
-                    printf("DEPOIS %d\n", k+1);
-                    printf("tamanho_prog-(i+1) == %d\nprogenitor == %d\n", tamanho_prog-(i+1), novo_crom2->genes[j][k]);
+                    // printf("DEPOIS %d\n", k+1);
+                    // printf("tamanho_prog-(i+1) == %d\nprogenitor == %d\n", tamanho_prog-(i+1), novo_crom2->genes[j][k]);
                     novo_crom2->genes[j][k] = progenitores[tamanho_prog-(i+1)]->genes[j][k]; // ERRO DE ACESSO A MEMORIA AQUI
                     novo_crom4->genes[j][k] = progenitores[tamanho_prog-(i+1)]->genes[j][k];
                 } else {
@@ -347,7 +347,7 @@ void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int
         novos_individuos[2 + indice_novos_individuos] = novo_crom3;
         novos_individuos[3 + indice_novos_individuos] = novo_crom4;
 
-        novo_crom1 = NULL;
+        /*novo_crom1 = NULL;
         novo_crom2 = NULL;
         novo_crom3 = NULL;
         novo_crom4 = NULL;
@@ -355,10 +355,13 @@ void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int
         free(novo_crom1);
         free(novo_crom2);
         free(novo_crom3);
-        free(novo_crom4);
+        free(novo_crom4);*/
 
         indice_novos_individuos += 4;
     }
+
+    /*progenitores = NULL;
+    free(progenitores);*/
 
     int *indices = gerar_aleatorios_nao_sobreviventes(tamanho_pop-1, 0, qtd_novos_individuos, pop);
 
@@ -366,8 +369,9 @@ void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int
     {
         int indice = indices[i];
 
-        free(pop[indice]);
+        Cromossomo *aux = pop[indice];
         pop[indice] = novos_individuos[i];
+        free(aux);
         // printf("%d\n", indice+1);
     }
 
