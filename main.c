@@ -8,8 +8,8 @@
 
 #define TAMCROMOSSOMO 5 // comprimento do vetor 'genes' de cada cromossomo
 
-#define POPINICIAL 10000 // tamanho da populacao inicial
-#define NUMGERACOES 10000 // qtd de geracoes do algoritmo
+#define POPINICIAL 5000 // tamanho da populacao inicial
+#define NUMGERACOES 50000 // qtd de geracoes do algoritmo
 
 typedef struct _cromossomo_{
     int chave;
@@ -40,20 +40,23 @@ int main()
     exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
     while(geracao_atual <= NUMGERACOES)
     {
-        Cromossomo **progenitores = roleta(populacao, POPINICIAL);
-        crossover(populacao, progenitores, POPINICIAL, qtd_progenitores, TAMCROMOSSOMO);
-        mutacao(populacao, POPINICIAL);
-        avaliar(populacao, POPINICIAL, TAMCROMOSSOMO);
-        geracao_atual++;
-        sobrevivencia(populacao, POPINICIAL, TAMCROMOSSOMO);
-        exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
-        printf("Geracao %d\n\n", geracao_atual);
         if(geracao_atual % 2 == 0)
         {
             imigracao(populacao, POPINICIAL, TAMCROMOSSOMO);
         }
+        Cromossomo **progenitores = roleta(populacao, POPINICIAL);
+        crossover(populacao, progenitores, POPINICIAL, qtd_progenitores, TAMCROMOSSOMO);
+
+        mutacao(populacao, POPINICIAL);
+        avaliar(populacao, POPINICIAL, TAMCROMOSSOMO);
+        sobrevivencia(populacao, POPINICIAL, TAMCROMOSSOMO);
+
+        exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
+        printf("Geracao %d\n\n", geracao_atual);
+        geracao_atual++;
     }
 
+    //                                  TESTES
     // crossover(populacao, progenitores, POPINICIAL, qtd_progenitores, TAMCROMOSSOMO);
     // mutacao(populacao, POPINICIAL);
     // imigracao(populacao, POPINICIAL, TAMCROMOSSOMO);

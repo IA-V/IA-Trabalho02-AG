@@ -403,12 +403,16 @@ void fitness(Cromossomo *individuo, int tamanho_cromossomo)
     if(individuo->genes[0][1] == NORUEGUES)
     {
         individuo->pontuacao++;
+    } else {
+        individuo->pontuacao--;
     }
 
     if(individuo->genes[2][2] == LEITE)
     {
         individuo->pontuacao++;
-    }
+    }/* else {
+        individuo->pontuacao--;
+    }*/
 
     for(int i = 0; i < tamanho_cromossomo; i++)
     {
@@ -437,6 +441,30 @@ void fitness(Cromossomo *individuo, int tamanho_cromossomo)
             individuo->pontuacao++;
         }
 
+        if(individuo->genes[i][0] == BRANCO)
+        {
+            int pontuar = FALSE;
+            if(i > 0)
+            {
+                if(individuo->genes[i-1][0] == VERDE)
+                {
+                    pontuar = TRUE;
+                }
+            } else {
+                individuo->pontuacao--;
+            }
+
+            if(individuo->genes[i][2] == CAFE)
+            {
+                pontuar = TRUE;
+            }
+
+            if(pontuar)
+            {
+                individuo->pontuacao++;
+            }
+        }
+
         if(individuo->genes[i][0] == VERDE)
         {
             int pontuar = FALSE;
@@ -446,12 +474,16 @@ void fitness(Cromossomo *individuo, int tamanho_cromossomo)
                 {
                     pontuar = TRUE;
                 }
+            } else {
+                individuo->pontuacao--;
             }
 
             if(individuo->genes[i][2] == CAFE)
             {
                 pontuar = TRUE;
-            }
+            }/* else {
+                individuo->pontuacao--;
+            }*/
 
             if(pontuar)
             {
@@ -529,8 +561,16 @@ void fitness(Cromossomo *individuo, int tamanho_cromossomo)
                     if(individuo->genes[i+1][0] == AZUL)
                     {
                         pontuar = TRUE;
+                    } else
+                    {
+                        individuo->pontuacao--;
                     }
                 }
+            }
+
+            if(individuo->genes[i][0] == AZUL)
+            {
+                individuo->pontuacao--;
             }
 
             if(pontuar)
@@ -549,6 +589,4 @@ void fitness(Cromossomo *individuo, int tamanho_cromossomo)
             individuo->pontuacao++;
         }
     }
-
-
 }

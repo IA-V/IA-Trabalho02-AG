@@ -7,7 +7,7 @@
 1668431526 c:\users\iagov\onedrive\documentos\trabalho02-ia\cromossomo.h
 	"sllist.h"
 
-1668605435 source:c:\users\iagov\onedrive\documentos\trabalho02-ia\main.c
+1668643457 source:c:\users\iagov\onedrive\documentos\trabalho02-ia\main.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
@@ -18,10 +18,10 @@
 1668535964 c:\users\iagov\onedrive\documentos\trabalho02-ia\alelo.h
 	"sllist.h"
 
-1668605583 c:\users\iagov\onedrive\documentos\trabalho02-ia\populacao.h
+1668646211 c:\users\iagov\onedrive\documentos\trabalho02-ia\populacao.h
 	"cromossomo.h"
 
-1668605029 source:c:\users\iagov\onedrive\documentos\trabalho02-ia\populacao.c
+1668645967 source:c:\users\iagov\onedrive\documentos\trabalho02-ia\populacao.c
 	"populacao.h"
 	"cromossomo.h"
 	"alelo.h"
