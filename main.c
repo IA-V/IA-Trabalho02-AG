@@ -8,8 +8,8 @@
 
 #define TAMCROMOSSOMO 5 // comprimento do vetor 'genes' de cada cromossomo
 
-#define POPINICIAL 2000 // tamanho da populacao inicial
-#define NUMGERACOES 100000 // qtd de geracoes do algoritmo
+#define POPINICIAL 5000 // tamanho da populacao inicial
+#define NUMGERACOES 8000 // qtd de geracoes do algoritmo
 
 typedef struct _cromossomo_{
     int chave;
