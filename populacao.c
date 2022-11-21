@@ -111,6 +111,7 @@ void exibir_genotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
         printf("Casa %d: %d %d %d %d %d\n", j+1, pop[tamanho_pop-1]->genes[j][0], pop[tamanho_pop-1]->genes[j][1], pop[tamanho_pop-1]->genes[j][2], pop[tamanho_pop-1]->genes[j][3], pop[tamanho_pop-1]->genes[j][4]);
     }
     printf("\n");
+    system("cls");
 
     /*for(int i = 0; i < tamanho_pop; i++)
     {
@@ -481,9 +482,9 @@ void fitness(Cromossomo *individuo, int tamanho_cromossomo)
             if(individuo->genes[i][2] == CAFE)
             {
                 pontuar = TRUE;
-            }/* else {
+            } else {
                 individuo->pontuacao--;
-            }*/
+            }
 
             if(pontuar)
             {
@@ -556,15 +557,18 @@ void fitness(Cromossomo *individuo, int tamanho_cromossomo)
                 if(individuo->genes[i-1][0] == AZUL)
                 {
                     pontuar = TRUE;
-                } else if(i < (tamanho_cromossomo-1))
+                } else
                 {
-                    if(individuo->genes[i+1][0] == AZUL)
-                    {
-                        pontuar = TRUE;
-                    } else
-                    {
-                        individuo->pontuacao--;
-                    }
+                    individuo->pontuacao--;
+                }
+            } else if(i < (tamanho_cromossomo-1))
+            {
+                if(individuo->genes[i+1][0] == AZUL)
+                {
+                    pontuar = TRUE;
+                } else
+                {
+                    individuo->pontuacao--;
                 }
             }
 

@@ -8,8 +8,8 @@
 
 #define TAMCROMOSSOMO 5 // comprimento do vetor 'genes' de cada cromossomo
 
-#define POPINICIAL 5000 // tamanho da populacao inicial
-#define NUMGERACOES 50000 // qtd de geracoes do algoritmo
+#define POPINICIAL 2000 // tamanho da populacao inicial
+#define NUMGERACOES 100000 // qtd de geracoes do algoritmo
 
 typedef struct _cromossomo_{
     int chave;
@@ -38,7 +38,7 @@ int main()
     avaliar(populacao, POPINICIAL, TAMCROMOSSOMO);
 
     exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
-    while(geracao_atual <= NUMGERACOES)
+    while(geracao_atual <= NUMGERACOES || populacao[POPINICIAL - 1]->pontuacao == 15)
     {
         if(geracao_atual % 2 == 0)
         {

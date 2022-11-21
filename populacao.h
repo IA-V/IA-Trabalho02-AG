@@ -3,10 +3,10 @@
 
 #include "cromossomo.h"
 
-#define TAXA_SOBREVIVENCIA 0.1
-#define TAXA_CROSSOVER 0.5
-#define TAXA_MUTACAO 0.15
-#define TAXA_IMIGRACAO 0.25
+#define TAXA_SOBREVIVENCIA 0.45
+#define TAXA_CROSSOVER 0.4
+#define TAXA_MUTACAO 0.1
+#define TAXA_IMIGRACAO 0.05
 
 // ORDENACAO
 void mergesort(Cromossomo **populacao, int tamanho_pop);
