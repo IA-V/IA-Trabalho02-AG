@@ -20,8 +20,25 @@ typedef struct _cromossomo_{
 
 int geracao_atual = 1; // valor para guardar a geracao atual durante a execucao do algoritmo
 
+void exibir_forma_selecionada(int opcao, Cromossomo **populacao)
+{
+    switch(opcao)
+    {
+        case 1:
+            exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
+            break;
+        case 2:
+            exibir_fenotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
+            break;
+    }
+}
+
 int main()
 {
+    int opcao;
+    printf("1 - Exibir genotipo\n2 - Exibir fenotipo\n");
+    scanf("%d", &opcao);
+
     int geracao_atual = 1;
 
     int qtd_progenitores = (POPINICIAL * TAXA_CROSSOVER) / 2;
@@ -37,9 +54,9 @@ int main()
     Cromossomo **populacao = gerar_populacao_inicial(POPINICIAL, TAMCROMOSSOMO);
     avaliar(populacao, POPINICIAL, TAMCROMOSSOMO);
 
-    exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
-    while(geracao_atual <= NUMGERACOES || populacao[POPINICIAL - 1]->pontuacao == 15)
+    while(geracao_atual <= NUMGERACOES && populacao[POPINICIAL - 1]->pontuacao != 15)
     {
+        printf("-------------------------------------------------------------------------------------------------------------------------------------\nGeracao %d\n\n", geracao_atual);
         if(geracao_atual % 2 == 0)
         {
             imigracao(populacao, POPINICIAL, TAMCROMOSSOMO);
@@ -51,22 +68,10 @@ int main()
         avaliar(populacao, POPINICIAL, TAMCROMOSSOMO);
         sobrevivencia(populacao, POPINICIAL, TAMCROMOSSOMO);
 
-        exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
-        printf("Geracao %d\n\n", geracao_atual);
+        exibir_forma_selecionada(opcao, populacao);
+        // exibir_fenotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
         geracao_atual++;
     }
-
-    //                                  TESTES
-    // crossover(populacao, progenitores, POPINICIAL, qtd_progenitores, TAMCROMOSSOMO);
-    // mutacao(populacao, POPINICIAL);
-    // imigracao(populacao, POPINICIAL, TAMCROMOSSOMO);
-    // sobrevivencia(populacao, POPINICIAL, TAMCROMOSSOMO);
-    // exibir_genotipo_sobreviventes(populacao, POPINICIAL, TAMCROMOSSOMO);
-    // roleta(populacao, POPINICIAL);
-    // exibir_genotipo(populacao, POPINICIAL, TAMCROMOSSOMO);
-
-    /*printf("%d\n", crom1->chave);
-    printf("%d\n", crom2->chave);*/
 
     return 0;
 }

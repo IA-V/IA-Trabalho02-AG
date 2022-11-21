@@ -3,10 +3,10 @@
 
 #include "cromossomo.h"
 
-#define TAXA_SOBREVIVENCIA 0.45
-#define TAXA_CROSSOVER 0.4
+#define TAXA_SOBREVIVENCIA 0.35
+#define TAXA_CROSSOVER 0.45
 #define TAXA_MUTACAO 0.1
-#define TAXA_IMIGRACAO 0.05
+#define TAXA_IMIGRACAO 0.1
 
 // ORDENACAO
 void mergesort(Cromossomo **populacao, int tamanho_pop);
@@ -19,6 +19,7 @@ Cromossomo **gerar_populacao_inicial(int tam_pop, int tamanho_cromossomo);
 int *gerar_aleatorios_nao_sobreviventes(int upper, int lower, int tamanho, Cromossomo **pop);
 int eh_sobrevivente(Cromossomo *crom);
 void exibir_genotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo);
+void exibir_fenotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo);
 
 // OPERACOES GENETICAS
 void sobrevivencia(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo);

@@ -80,27 +80,9 @@ int *gerar_aleatorios_nao_sobreviventes(int upper, int lower, int tamanho, Cromo
 
     }while(i < tamanho);
 
-    /*for(i = 0; i < tamanho; i++){
-        printf("%d\n", vet[i]);
-    }
-    printf("\n\n");*/
-
     return vet;
 
 }
-
-/*void exibir_genotipo_sobreviventes(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
-{
-    for(int i = 0; i < qtd_sobreviventes; i++)
-    {
-        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, sobreviventes[i]->pontuacao, sobreviventes[i]->chave, sobreviventes[i]->aptidao);
-        for(int j = 0; j < tamanho_cromossomo; j++)
-        {
-            printf("Casa %d: %d %d %d %d %d\n", j+1, sobreviventes[i]->genes[j][0], sobreviventes[i]->genes[j][1], sobreviventes[i]->genes[j][2], sobreviventes[i]->genes[j][3], sobreviventes[i]->genes[j][4]);
-        }
-        printf("\n");
-    }
-}*/
 
 void exibir_genotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 {
@@ -111,17 +93,120 @@ void exibir_genotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
         printf("Casa %d: %d %d %d %d %d\n", j+1, pop[tamanho_pop-1]->genes[j][0], pop[tamanho_pop-1]->genes[j][1], pop[tamanho_pop-1]->genes[j][2], pop[tamanho_pop-1]->genes[j][3], pop[tamanho_pop-1]->genes[j][4]);
     }
     printf("\n");
-    system("cls");
+    // system("cls");
+}
 
-    /*for(int i = 0; i < tamanho_pop; i++)
+void exibir_fenotipo(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
+{
+    // Exibe apenas o ultimo elemento
+    printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", tamanho_pop, pop[tamanho_pop-1]->pontuacao, pop[tamanho_pop-1]->chave, pop[tamanho_pop-1]->aptidao);
+    for(int j = 0; j < tamanho_cromossomo; j++)
     {
-        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, pop[i]->pontuacao, pop[i]->chave, pop[i]->aptidao);
-        for(int j = 0; j < tamanho_cromossomo; j++)
+        printf("Casa %d: |", j+1);
+        // CORES
+        switch(pop[tamanho_pop-1]->genes[j][0])
         {
-            printf("Casa %d: %d %d %d %d %d\n", j+1, pop[i]->genes[j][0], pop[i]->genes[j][1], pop[i]->genes[j][2], pop[i]->genes[j][3], pop[i]->genes[j][4]);
+            case AMARELO:
+                printf(" AMARELO |");
+                break;
+            case AZUL:
+                printf(" AZUL |");
+                break;
+            case BRANCO:
+                printf(" BRANCO |");
+                break;
+            case VERDE:
+                printf(" VERDE |");
+                break;
+            case VERMELHO:
+                printf(" VERMELHO |");
+                break;
         }
+
+        // NACIONALIDADES
+        switch(pop[tamanho_pop-1]->genes[j][1])
+        {
+            case ALEMAO:
+                printf(" ALEMAO |");
+                break;
+            case DINAMARQUES:
+                printf(" DINAMARQUES |");
+                break;
+            case INGLES:
+                printf(" INGLES |");
+                break;
+            case NORUEGUES:
+                printf(" NORUEGUES |");
+                break;
+            case SUECO:
+                printf(" SUECO |");
+                break;
+        }
+
+        // BEBIDAS
+        switch(pop[tamanho_pop-1]->genes[j][2])
+        {
+            case AGUA:
+                printf(" AGUA |");
+                break;
+            case CAFE:
+                printf(" CAFE |");
+                break;
+            case CHA:
+                printf(" CHA |");
+                break;
+            case CERVEJA:
+                printf(" CERVEJA |");
+                break;
+            case LEITE:
+                printf(" LEITE |");
+                break;
+        }
+
+        // CIGARROS
+        switch(pop[tamanho_pop-1]->genes[j][3])
+        {
+            case BLENDS:
+                printf(" BLENDS |");
+                break;
+            case BLUEMASTER:
+                printf(" BLUEMASTER |");
+                break;
+            case DUNHILL:
+                printf(" DUNHILL |");
+                break;
+            case PALLMALL:
+                printf(" PALLMALL |");
+                break;
+            case PRINCE:
+                printf(" PRINCE |");
+                break;
+        }
+
+        // ANIMAIS
+        switch(pop[tamanho_pop-1]->genes[j][4])
+        {
+            case CACHORRO:
+                printf(" CACHORRO |");
+                break;
+            case CAVALO:
+                printf(" CAVALO |");
+                break;
+            case GATO:
+                printf(" GATO |");
+                break;
+            case PASSARO:
+                printf(" PASSARO |");
+                break;
+            case PEIXE:
+                printf(" PEIXE |");
+                break;
+        }
+
         printf("\n");
-    }*/
+    }
+    printf("\n");
+    // system("cls");
 }
 
 Cromossomo **gerar_populacao_inicial(int tam_pop, int tamanho_cromossomo)
@@ -164,9 +249,6 @@ void mutacao(Cromossomo **pop, int tamanho_pop)
         pop[indice]->genes[casa1][locus] = pop[indice]->genes[casa2][locus];
         pop[indice]->genes[casa2][locus] = alelo_aux;
 
-        /*printf("Individuo: %d\n", indice+1);
-        printf("\n");*/
-
     }
 }
 
@@ -176,7 +258,6 @@ void imigracao(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 {
     int qtd_individuos = tamanho_pop * TAXA_IMIGRACAO; // TAXA_IMIGRACAO% da populacao sera selecionada como parte menos apta
 
-    // printf("%d\n", qtd_individuos);
     mergesort(pop, tamanho_pop); // ordena o vetor da populacao em ordem crescente
 
     for(int i = 0; i < qtd_individuos; i++)
@@ -207,10 +288,6 @@ void sobrevivencia(Cromossomo **pop, int tamanho_pop, int tamanho_cromossomo)
 {
     if(sobreviventes != NULL)
     {
-        /*for(int i = 0; i < qtd_sobreviventes; i++)
-        {
-            free(sobreviventes[i]);
-        }*/
         free(sobreviventes);
         sobreviventes = NULL;
         qtd_sobreviventes = 0;
@@ -283,24 +360,12 @@ Cromossomo **roleta(Cromossomo **pop, int tamanho_pop)
         }
     }
     mergesort(progenitores, qtd_pais);
-    // exibir_genotipo(progenitores, qtd_pais, 5);
 
     return progenitores;
 }
 
 void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int tamanho_prog, int tamanho_cromossomo)
 {
-    /*printf("PROGENITORES:\n");
-    for(int i = 0; i < tamanho_prog; i++)
-    {
-        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, progenitores[i]->pontuacao, progenitores[i]->chave, progenitores[i]->aptidao);
-        for(int j = 0; j < tamanho_cromossomo; j++)
-        {
-            printf("Casa %d: %d %d %d %d %d\n", j+1, progenitores[i]->genes[j][0], progenitores[i]->genes[j][1], progenitores[i]->genes[j][2], progenitores[i]->genes[j][3], progenitores[i]->genes[j][4]);
-        }
-        printf("\n");
-    }*/
-
     int indice_ponto_corte = 2;
     int qtd_novos_individuos = tamanho_prog * 2;
     int indice_novos_individuos = 0;
@@ -316,17 +381,13 @@ void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int
 
         for(int j = 0; j < tamanho_cromossomo; j++)
         {
-            // printf("------------ %d\n", j+1);
             for(int k = 0; k < tamanho_cromossomo; k++)
             {
                 if(k < indice_ponto_corte)
                 {
-                    // printf("ANTES %d\n", k+1);
                     novo_crom1->genes[j][k] = progenitores[i]->genes[j][k];
                     novo_crom3->genes[j][k] = progenitores[i]->genes[j][k];
-                    // printf("DEPOIS %d\n", k+1);
-                    // printf("tamanho_prog-(i+1) == %d\nprogenitor == %d\n", tamanho_prog-(i+1), novo_crom2->genes[j][k]);
-                    novo_crom2->genes[j][k] = progenitores[tamanho_prog-(i+1)]->genes[j][k]; // ERRO DE ACESSO A MEMORIA AQUI
+                    novo_crom2->genes[j][k] = progenitores[tamanho_prog-(i+1)]->genes[j][k];
                     novo_crom4->genes[j][k] = progenitores[tamanho_prog-(i+1)]->genes[j][k];
                 } else {
                     novo_crom4->genes[j][k] = progenitores[i]->genes[j][k];
@@ -348,21 +409,8 @@ void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int
         novos_individuos[2 + indice_novos_individuos] = novo_crom3;
         novos_individuos[3 + indice_novos_individuos] = novo_crom4;
 
-        /*novo_crom1 = NULL;
-        novo_crom2 = NULL;
-        novo_crom3 = NULL;
-        novo_crom4 = NULL;
-
-        free(novo_crom1);
-        free(novo_crom2);
-        free(novo_crom3);
-        free(novo_crom4);*/
-
         indice_novos_individuos += 4;
     }
-
-    /*progenitores = NULL;
-    free(progenitores);*/
 
     int *indices = gerar_aleatorios_nao_sobreviventes(tamanho_pop-1, 0, qtd_novos_individuos, pop);
 
@@ -373,19 +421,7 @@ void crossover(Cromossomo **pop, Cromossomo **progenitores, int tamanho_pop, int
         Cromossomo *aux = pop[indice];
         pop[indice] = novos_individuos[i];
         free(aux);
-        // printf("%d\n", indice+1);
     }
-
-    /*printf("\nNOVOS INDIVIDUOS:\n");
-    for(int i = 0; i < qtd_novos_individuos; i++)
-    {
-        printf("\tIndividuo %d\nPontuacao: %d\nChave: %d\nAptidao: %.3f\n", i+1, novos_individuos[i]->pontuacao, novos_individuos[i]->chave, novos_individuos[i]->aptidao);
-        for(int j = 0; j < tamanho_cromossomo; j++)
-        {
-            printf("Casa %d: %d %d %d %d %d\n", j+1, novos_individuos[i]->genes[j][0], novos_individuos[i]->genes[j][1], novos_individuos[i]->genes[j][2], novos_individuos[i]->genes[j][3], novos_individuos[i]->genes[j][4]);
-        }
-        printf("\n");
-    }*/
 }
 
 void avaliar(Cromossomo **populacao, int tamanho_pop, int tamanho_cromossomo)
@@ -411,9 +447,7 @@ void fitness(Cromossomo *individuo, int tamanho_cromossomo)
     if(individuo->genes[2][2] == LEITE)
     {
         individuo->pontuacao++;
-    }/* else {
-        individuo->pontuacao--;
-    }*/
+    }
 
     for(int i = 0; i < tamanho_cromossomo; i++)
     {
